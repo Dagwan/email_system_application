@@ -169,14 +169,13 @@ const EmailForm = () => {
             setPopupVisible(false); // Hide popup after success
           }, 2000); // Popup disappears after 2 seconds
         } catch (error) {
-          console.error(error);
-          setStatus({ type: "error", message: `Failed to prepare email. Error: ${error.message || error}` });
+          setStatus({ type: "error", message: `Failed to send email. Error: ${error.message || error}`});
         }
-      }, 2000); // Simulate a 2-second preparation time before sending
+      }, 2000); 
 
     } catch (error) {
       console.error(error);
-      setStatus({ type: "error", message: "Failed to prepare email." });
+      setStatus({ type: "error", message: `Failed to prepare email. Error: ${error.message || error}` });
     }
   };
 
