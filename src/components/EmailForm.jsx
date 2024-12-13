@@ -169,6 +169,7 @@ const EmailForm = () => {
             setPopupVisible(false); 
           }, 2000); 
         } catch (error) {
+          console.error(error);
           setStatus({ type: "error", message: `Failed to send email. Error: ${error.message || error}`});
         }
       }, 2000); 
