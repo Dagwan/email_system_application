@@ -61,8 +61,6 @@ const EmailForm = () => {
 
   const [status, setStatus] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
-  const [emailSent, setEmailSent] = useState(false);
-  const [isSending, setIsSending] = useState(false);
 
   // Load form data from localStorage if it exists
   useEffect(() => {
@@ -165,9 +163,7 @@ const EmailForm = () => {
       // Simulate a delay before sending the email
       setTimeout(async () => {
         try {
-          setIsSending(true);
           await axios.post("https://send-email-517z.onrender.com/send-invitation-email", formData);
-          setEmailSent(true);
           setStatus({ type: "success", message: "Email sent successfully!" });
           setTimeout(() => {
             setPopupVisible(false); // Hide popup after success
@@ -185,10 +181,7 @@ const EmailForm = () => {
 
   return (
     <section className="container">
-
-
       <div>
-        {/* <h1>London Graduate School Invitation Email</h1> */}
         <div className="sticky-images">
           <Image
             src="/images/header.JPG"
@@ -206,7 +199,6 @@ const EmailForm = () => {
             layout="intrinsic"
             className="img-fluid"
           />
-          
         </div>
         <hr></hr>
         
@@ -334,12 +326,12 @@ const EmailForm = () => {
             className="img-fluid"
           />
         </div>
-
     </section>
   );
 };
 
 export default EmailForm;
+
 
 
 
