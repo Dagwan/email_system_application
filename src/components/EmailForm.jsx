@@ -61,6 +61,8 @@ const EmailForm = () => {
 
   const [status, setStatus] = useState(null);
   const [popupVisible, setPopupVisible] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
+  const [isSending, setIsSending] = useState(false);
 
   // Load form data from localStorage if it exists
   useEffect(() => {
@@ -155,134 +157,184 @@ const EmailForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("https://send-email-517z.onrender.com/send-invitation-email", formData);
-      setStatus({ type: "success", message: "Email sent successfully!" });
-      setPopupVisible(true); // Show the popup
-      setTimeout(() => setPopupVisible(false), 3000); // Hide after 3 seconds
+      setStatus({ type: "info", message: "Sending email..." });
+
+      // Show the popup
+      setPopupVisible(true);
+
+      // Simulate a delay before sending the email
+      setTimeout(async () => {
+        try {
+          setIsSending(true);
+          await axios.post("https://send-email-517z.onrender.com/send-invitation-email", formData);
+          setEmailSent(true);
+          setStatus({ type: "success", message: "Email sent successfully!" });
+          setTimeout(() => {
+            setPopupVisible(false); // Hide popup after success
+          }, 2000); // Popup disappears after 2 seconds
+        } catch (error) {
+          setStatus({ type: "error", message: "Failed to send email." });
+        }
+      }, 2000); // Simulate a 2-second preparation time before sending
+
     } catch (error) {
       console.error(error);
-      setStatus({ type: "error", message: "Failed to send email." });
-      setPopupVisible(true); // Show the popup
-      setTimeout(() => setPopupVisible(false), 3000); // Hide after 3 seconds
+      setStatus({ type: "error", message: "Failed to prepare email." });
     }
   };
 
   return (
-    <div>
-      <h1>London Graduate School Invitation Email</h1>
-      <Image
-        src="/images/logo.JPG"
-        alt="logo"
-        width={500}
-        height={250}
-        layout="intrinsic"
-        className="img-fluid"
-      />
+    <section className="container">
 
-      <form onSubmit={handleSubmit}>
-        {/* Email and Name Inputs */}
-        {["email", "name"].map((field) => (
-          <div key={field}>
-            <label>{field.charAt(0).toUpperCase() + field.slice(1)}s:</label>
-            {formData[field].map((item, index) => (
-              <div key={index}>
-                <input
-                  type={field === "email" ? "email" : "text"}
-                  placeholder={`Enter ${field}`}
-                  value={item}
-                  onChange={(e) => handleChange(e, field, index)}
-                  required
-                />
-                <button type="button" onClick={() => removeField(field, index)}>
-                  Remove
-                </button>
-              </div>
-            ))}
-            <button type="button" onClick={() => addField(field)}>
-              Add {field.charAt(0).toUpperCase() + field.slice(1)}
-            </button>
+
+      <div>
+        {/* <h1>London Graduate School Invitation Email</h1> */}
+        <div className="sticky-images">
+          <Image
+            src="/images/header.JPG"
+            alt="logo"
+            width={500}
+            height={250}
+            layout="intrinsic"
+            className="img-fluid"
+          />
+          <Image
+            src="/images/header.JPG"
+            alt="logo"
+            width={500}
+            height={250}
+            layout="intrinsic"
+            className="img-fluid"
+          />
+        </div>
+        <hr></hr>
+        
+        <form onSubmit={handleSubmit}>
+          {/* Email and Name Inputs */}
+          {["email", "name"].map((field) => (
+            <div key={field}>
+              <label>{field.charAt(0).toUpperCase() + field.slice(1)}s:</label>
+              {formData[field].map((item, index) => (
+                <div key={index}>
+                  <input
+                    type={field === "email" ? "email" : "text"}
+                    placeholder={`Enter ${field}`}
+                    value={item}
+                    onChange={(e) => handleChange(e, field, index)}
+                    required
+                  />
+                  <button type="button" onClick={() => removeField(field, index)}>
+                    Remove
+                  </button>
+                </div>
+              ))}
+              <button type="button" onClick={() => addField(field)}>
+                Add {field.charAt(0).toUpperCase() + field.slice(1)}
+              </button>
+            </div>
+          ))}
+
+          {/* Subject */}
+          <div>
+            <label>Subject:</label>
+            <input
+              type="text"
+              name="subject"
+              placeholder="Enter subject"
+              value={formData.subject}
+              onChange={(e) => handleChange(e, "subject")}
+              required
+            />
           </div>
-        ))}
 
-        {/* Subject */}
-        <div>
-          <label>Subject:</label>
-          <input
-            type="text"
-            name="subject"
-            placeholder="Enter subject"
-            value={formData.subject}
-            onChange={(e) => handleChange(e, "subject")}
-            required
+          {/* Dynamic Content */}
+          {Object.entries(formData.dynamicContent).map(([key, value]) => (
+            <div key={key}>
+              <label>
+                {key.charAt(0).toUpperCase() + key.replace(/([A-Z])/g, " $1").slice(1)}:
+              </label>
+              {Array.isArray(value) ? (
+                value.map((item, index) =>
+                  typeof item === "object" ? (
+                    <div key={index}>
+                      {Object.keys(item).map((subKey) => (
+                        <input
+                          key={subKey}
+                          type="text"
+                          name={subKey}
+                          placeholder={`Enter ${subKey}`}
+                          value={item[subKey]}
+                          onChange={(e) => handleChange(e, null, index, key)}
+                        />
+                      ))}
+                      <button type="button" onClick={() => removeField(null, index, key)}>
+                        Remove
+                      </button>
+                    </div>
+                  ) : (
+                    <div key={index}>
+                      <input
+                        type="text"
+                        placeholder={`Enter ${key}`}
+                        value={item}
+                        onChange={(e) => handleChange(e, null, index, key)}
+                      />
+                      <button type="button" onClick={() => removeField(null, index, key)}>
+                        Remove
+                      </button>
+                    </div>
+                  )
+                )
+              ) : (
+                <input
+                  type="text"
+                  name={key}
+                  placeholder={`Enter ${key}`}
+                  value={value}
+                  onChange={(e) => handleChange(e, null, null, "dynamicContent")}
+                />
+              )}
+              {Array.isArray(value) && (
+                <button type="button" onClick={() => addField(typeof value[0], key)}>
+                  Add {key.charAt(0).toUpperCase() + key.slice(1)}
+                </button>
+              )}
+            </div>
+          ))}
+
+          {/* Submit Button */}
+          <button type="submit">Send Email</button>
+        </form>
+
+        {/* Status Popup */}
+        {popupVisible && (
+          <div className={`popup ${status.type === "success" ? "success" : "error"}`}>
+            <div>{status.message}</div>
+          </div>
+        )}
+      </div>
+      <br></br>
+      <hr></hr>
+      <div className="sticky-images">
+          <Image
+            src="/images/footer.JPG"
+            alt="logo"
+            width={500}
+            height={250}
+            layout="intrinsic"
+            className="img-fluid"
+          />
+          <Image
+            src="/images/footer.JPG"
+            alt="logo"
+            width={500}
+            height={250}
+            layout="intrinsic"
+            className="img-fluid"
           />
         </div>
 
-        {/* Dynamic Content */}
-        {Object.entries(formData.dynamicContent).map(([key, value]) => (
-          <div key={key}>
-            <label>
-              {key.charAt(0).toUpperCase() + key.replace(/([A-Z])/g, " $1").slice(1)}:
-            </label>
-            {Array.isArray(value) ? (
-              value.map((item, index) =>
-                typeof item === "object" ? (
-                  <div key={index}>
-                    {Object.keys(item).map((subKey) => (
-                      <input
-                        key={subKey}
-                        type="text"
-                        name={subKey}
-                        placeholder={`Enter ${subKey}`}
-                        value={item[subKey]}
-                        onChange={(e) => handleChange(e, null, index, key)}
-                      />
-                    ))}
-                    <button type="button" onClick={() => removeField(null, index, key)}>
-                      Remove
-                    </button>
-                  </div>
-                ) : (
-                  <div key={index}>
-                    <input
-                      type="text"
-                      placeholder={`Enter ${key}`}
-                      value={item}
-                      onChange={(e) => handleChange(e, null, index, key)}
-                    />
-                    <button type="button" onClick={() => removeField(null, index, key)}>
-                      Remove
-                    </button>
-                  </div>
-                )
-              )
-            ) : (
-              <input
-                type="text"
-                name={key}
-                placeholder={`Enter ${key}`}
-                value={value}
-                onChange={(e) => handleChange(e, null, null, "dynamicContent")}
-              />
-            )}
-            {Array.isArray(value) && (
-              <button type="button" onClick={() => addField(typeof value[0], key)}>
-                Add {key.charAt(0).toUpperCase() + key.slice(1)}
-              </button>
-            )}
-          </div>
-        ))}
-
-        {/* Submit Button */}
-        <button type="submit">Send Email</button>
-      </form>
-
-      {/* Status Popup */}
-      {popupVisible && (
-        <div className={`popup ${status.type === "success" ? "success" : "error"}`}>
-          {status.message}
-        </div>
-      )}
-    </div>
+    </section>
   );
 };
 

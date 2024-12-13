@@ -1,5 +1,7 @@
 /* General Styling */
-
+body{
+  background-color: #e9ecef;
+}
 .container {
   max-width: 1200px;
   width: 100%;
@@ -7,24 +9,40 @@
   margin: 0 auto; /* Center container */
 }
 
-h1 {
-  color: #03045e;
-  font-size: 2rem;
-  text-align: left;
-  margin: 20px 0;
-  background-color: #f0f4f8;
-  padding: 10px;
-  display: inline-block;
-  width: calc(100% - 530px); /* Adjust width */
+
+.sticky-images {
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+  position: sticky; 
+  top: 0; 
+  z-index: 1000; 
+  width: 100%; 
+  max-width: 1200px; 
+  margin: 0 auto; 
+  background-color: white; 
 }
 
-img {
-  max-width: 100%;
-  height: auto;
-  width: 500px;
-  display: inline-block;
-  vertical-align: top;
+img.img-fluid {
+  width: 50%; 
+  height: auto; 
 }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sticky-images {
+    flex-direction: column; /* Stack images vertically */
+  }
+
+  img.img-fluid {
+    width: 100%; /* Make the visible image take full width */
+  }
+
+  img.img-fluid:nth-child(2) {
+    display: none; /* Hide the second image on smaller screens */
+  }
+}
+
 
 .form-container {
   display: flex;
@@ -85,11 +103,6 @@ button[type="submit"]:hover {
   background-color: #155d27;
 }
 
-/* Align Add/Remove buttons next to each other */
-button[type="button"] {
-  margin-left: 10px;
-  padding: 8px 12px;
-}
 
 /* Status message */
 .status-message {
@@ -144,5 +157,41 @@ button[type="button"] {
 
   button[type="submit"] {
     font-size: 1rem;
+  }
+}
+
+
+.popup {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
+  z-index: 1000;
+}
+
+.popup.success {
+  background-color: green;
+}
+
+.popup.error {
+  background-color: red;
+}
+
+/* Ensure responsiveness */
+@media (max-width: 768px) {
+  .popup {
+    font-size: 14px;
+    padding: 8px 16px;
+  }
+
+  .undo-button {
+    padding: 5px 10px;
   }
 }
