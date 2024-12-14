@@ -187,7 +187,7 @@ const EmailForm = () => {
       <MetaTags
         title="Email Form Application"
         description="Send personalized invitation emails with dynamic content using our email form application."
-        imageUrl="/images/logo.png"  
+        imageUrl="/images/header.jpg"  
         url="https://londongraduateschool.vercel.app/"  
       />
       <div>
