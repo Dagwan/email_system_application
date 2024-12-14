@@ -185,7 +185,7 @@ const EmailForm = () => {
       <div>
         <div className="sticky-images">
           <Image
-            src="/images/header.JPG"
+            src="/images/header.jpg"
             alt="logo"
             width={500}
             height={250}
@@ -193,7 +193,7 @@ const EmailForm = () => {
             className="img-fluid"
           />
           <Image
-            src="/images/header.JPG"
+            src="/images/header.jpg"
             alt="logo"
             width={500}
             height={250}
@@ -319,7 +319,7 @@ const EmailForm = () => {
             className="img-fluid"
           />
           <Image
-            src="/images/footer.JPG"
+            src="/images/footer.jpg"
             alt="logo"
             width={500}
             height={250}
