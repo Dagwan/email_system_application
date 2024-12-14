@@ -3,6 +3,7 @@ import axios from "axios";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Image from 'next/image';
 import "../app/styles/styles.css";
+import MetaTags from '../components/MetaTags';
 
 const EmailForm = () => {
   const [formData, setFormData] = useState({
@@ -181,7 +182,14 @@ const EmailForm = () => {
   };
 
   return (
-    <section className="container">
+    
+    <section className="container">      
+      <MetaTags
+        title="Email Form Application"
+        description="Send personalized invitation emails with dynamic content using our email form application."
+        imageUrl="/images/logo.png"  
+        url="https://londongraduateschool.vercel.app/"  
+      />
       <div>
         <div className="sticky-images">
           <Image
