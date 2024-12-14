@@ -311,7 +311,7 @@ const EmailForm = () => {
       <hr></hr>
       <div className="sticky-images">
           <Image
-            src="/images/footer.JPG"
+            src="/images/footer.jpg"
             alt="logo"
             width={500}
             height={250}
